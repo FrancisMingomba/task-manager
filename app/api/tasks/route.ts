@@ -12,8 +12,8 @@ export async function POST(request: NextRequest) {
 
   
 
-  const newTask = await prisma.issue.create({    // This line need attention
-    data: { title: body.title, descrition: body.description}
+  const newTask = await prisma.task.create({    // This line need attention
+    data: { title: body.title, description: body.description}
    });
 
    return NextResponse.json(newTask, { status: 201});
