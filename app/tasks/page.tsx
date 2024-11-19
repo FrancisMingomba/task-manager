@@ -1,11 +1,12 @@
-import React from 'react'
+//'use client';
+
+import React from 'react';
 import { Button, Table } from '@radix-ui/themes';
 import Link from 'next/link';
-//import prisma from '@prisma/client';
+import prisma from "@/prisma/client";
 
 const TasksPage = async () => {
-
-//const tasks = await prisma.Task.create;
+ const tasks = await prisma.task.findMany();
  
 
   return (
@@ -25,24 +26,20 @@ const TasksPage = async () => {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-        
-            <Table.Row >
-              <Table.Cell>Java</Table.Cell>
-              <Table.Cell className='hidden md:table-cell'>OPEN</Table.Cell>
-              <Table.Cell className='hidden md:table-cell'>11-8-2924</Table.Cell>
+          {tasks.map(task => (
+            <Table.Row key={task.id}>
+              <Table.Cell>
+                {task.title}
+                <div className='block md:hidden'>{task.status}</div>
+                </Table.Cell>
+              <Table.Cell className='hidden md:table-cell'>{task.status}</Table.Cell>
+              <Table.Cell className='hidden md:table-cell'>{task.createdAt.toDateString()}</Table.Cell>
             </Table.Row>
-            <Table.Row >
-              <Table.Cell>C++</Table.Cell>
-              <Table.Cell className='hidden md:table-cell'>IN-PROGRESS</Table.Cell>
-              <Table.Cell className='hidden md:table-cell'>11-8-2924</Table.Cell>
-            </Table.Row>
-            <Table.Row >
-              <Table.Cell>Python</Table.Cell>
-              <Table.Cell className='hidden md:table-cell'> CLOSED</Table.Cell>
-              <Table.Cell className='hidden md:table-cell'>11-8-2924</Table.Cell>
-            </Table.Row>
+
+          ))}
           
         </Table.Body>
+        
       </Table.Root>
     </div>
   )

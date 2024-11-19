@@ -1,8 +1,15 @@
 
 import prisma from "@/prisma/client";
 import { NextRequest, NextResponse } from "next/server";
-import { createTaskSchema } from "../../validationSchema";
+import { z } from 'zod';
 
+
+
+const createTaskSchema = z.object({
+  title: z.string().min(1).max(255),
+  description : z.string().min(1)
+
+})
 
 export async function POST(request: NextRequest) {
    const body = await  request.json();
@@ -12,7 +19,7 @@ export async function POST(request: NextRequest) {
 
   
 
-  const newTask = await prisma.task.create({    // This line need attention
+  const newTask = await prisma.task.create({
     data: { title: body.title, description: body.description}
    });
 

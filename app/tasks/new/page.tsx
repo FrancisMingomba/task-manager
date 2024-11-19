@@ -15,7 +15,9 @@ import Spinner from '@/app/components/Spinner';
 
 
 
-type TaskForm =z.infer<typeof createTaskSchema>;
+type TaskForm = z.infer<typeof createTaskSchema>;
+
+
 
 const NewTaskPape = () => {
    const router = useRouter();
@@ -24,16 +26,17 @@ const NewTaskPape = () => {
    });
    const [error, setError] =  useState('');
    const [ isSubmitting, setSubmitting ] =  useState(false);
-   const onSubmit =handleSubmit(async(data) => {
+
+   const onSubmit = handleSubmit(async ( data) => {
     try {
       setSubmitting(true);
-      await axios.post('/api/tasks', data)
-      router.push('/issues');
+      await axios.post('/api/tasks',data)
+      router.push('/tasks');
     } catch (error) {
-      setSubmitting(false)
+      setSubmitting(false);
       setError('An unexpected error occured.');
     }
-  
+   
    })
 
   return (
@@ -43,7 +46,7 @@ const NewTaskPape = () => {
         </Callout.Root>}
     <form 
        className=' space-y-3'
-       onSubmit={onSubmit}>
+       onSubmit={ onSubmit }>
         <TextField.Root>
             <TextField.Input placeholder='Title'  {...register('title')}/>
         </TextField.Root>
@@ -57,7 +60,9 @@ const NewTaskPape = () => {
         control={control}
         render={({ field }) => <SimpleMDE placeholder='Description'  {...field} /> }
          />
-         <ErrorMessage>{errors.description?.message}</ErrorMessage>
+         <ErrorMessage>
+           {errors.description?.message}
+         </ErrorMessage>
         <Button disabled={isSubmitting}>Submit New Issue  {isSubmitting && <Spinner />}</Button>
     </form>
     </div>
