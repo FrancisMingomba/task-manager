@@ -51,7 +51,9 @@ const TasksPage = async () => {
         
       </Table.Root>
     </div>
-  )
-}
+  );
+};
+
+export const dynamic = 'force-dynamic';
 
 export default TasksPage

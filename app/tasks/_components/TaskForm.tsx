@@ -1,27 +1,28 @@
 'use client';
 
-import { Button, Callout, TextField } from '@radix-ui/themes'
-import SimpleMDE from "react-simplemde-editor";
-import { useForm, Controller } from 'react-hook-form';
-import axios from 'axios';
-import "easymde/dist/easymde.min.css";
-import React, { useState } from 'react'
-import { useRouter } from 'next/navigation';
-import { zodResolver } from '@hookform/resolvers/zod' ;
-import { createTaskSchema } from '@/app/validationSchema';
-import { z } from 'zod';
 import ErrorMessage from '@/app/components/ErrorMessage';
 import Spinner from '@/app/components/Spinner';
+import { taskSchema } from '@/app/validationSchema';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Task } from '@prisma/client';
+import { Button, Callout, TextField } from '@radix-ui/themes';
+import axios from 'axios';
+import "easymde/dist/easymde.min.css";
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import SimpleMDE from "react-simplemde-editor";
+import { z } from 'zod';
 
 
 
-type TaskFormData = z.infer<typeof createTaskSchema>;
+
+type TaskFormData = z.infer<typeof taskSchema>;
 
 const TaskForm = ({ task }: {task?: Task }) => {
    const router = useRouter();
    const {register, control, handleSubmit, formState: { errors} } = useForm<TaskFormData>({
-    resolver: zodResolver(createTaskSchema)
+    resolver: zodResolver(taskSchema)
    });
    const [error, setError] =  useState('');
    const [ isSubmitting, setSubmitting ] =  useState(false);
@@ -29,8 +30,12 @@ const TaskForm = ({ task }: {task?: Task }) => {
    const onSubmit = handleSubmit(async ( data) => {
     try {
       setSubmitting(true);
-      await axios.post('/api/tasks',data)
+      if (task) 
+       await axios.patch('/api/task/' + task.id, data);
+      else
+       await axios.post('/api/tasks',data)
       router.push('/tasks');
+      router.refresh();
     } catch (error) {
       setSubmitting(false);
       setError('An unexpected error occured.');
@@ -63,7 +68,10 @@ const TaskForm = ({ task }: {task?: Task }) => {
          <ErrorMessage>
            {errors.description?.message}
          </ErrorMessage>
-        <Button disabled={isSubmitting}>Submit New Issue  {isSubmitting && <Spinner />}</Button>
+        <Button disabled={isSubmitting}>
+         {task ? 'Update Task' : 'Submit New Issue'} {' '}
+         {isSubmitting && <Spinner />}
+        </Button>
     </form>
     </div>
   )

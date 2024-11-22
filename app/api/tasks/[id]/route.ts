@@ -12,8 +12,8 @@ export async function  PATCH(
             return NextResponse.json(valadation.error.format(), { status: 400 });
 
         const task = await prisma.task.findUnique({
-            where: { id: parseInt(params.id)}
-        }) ;
+            where: { id: parseInt(params.id) }
+        });
 
         if (!task)
             return NextResponse.json({error: 'Invalid task' }, { status: 404});
@@ -29,3 +29,21 @@ export async function  PATCH(
         return NextResponse.json(updateTask);
 
     }
+
+    export async function  DELETE(
+        request: NextRequest, 
+        { params }: { params: {id: string}}) {
+           const task = await prisma.task.findUnique({
+                where: { id: parseInt(params.id)}
+            });
+
+            if (!task)
+                return NextResponse.json({error: 'Invalid task' }, { status: 404});
+
+            await prisma.task.delete({
+                where: { id: task.id}
+            });
+
+            return NextResponse.json({});
+        }
+    
