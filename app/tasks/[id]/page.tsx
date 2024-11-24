@@ -13,7 +13,6 @@ interface Props {
 }
 
 const TaskDetailPage = async ({ params }: Props) => {
-   // if (typeof params.id !== 'number') notFound();
 
    const task = await  prisma.task.findUnique({
         where: { id: parseInt(params.id) }

@@ -1,6 +1,7 @@
 import { taskSchema } from "@/app/validationSchema";
 import prisma from "@/prisma/client";
 import { NextRequest, NextResponse } from "next/server";
+import { deflateRawSync } from "node:zlib";
 
 
 export async function  PATCH(
@@ -33,6 +34,7 @@ export async function  PATCH(
     export async function  DELETE(
         request: NextRequest, 
         { params }: { params: {id: string}}) {
+            
            const task = await prisma.task.findUnique({
                 where: { id: parseInt(params.id)}
             });
