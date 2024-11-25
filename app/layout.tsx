@@ -1,3 +1,4 @@
+
 import "@radix-ui/themes/styles.css";
 import './theme-config.css';
 import './globals.css';
@@ -5,6 +6,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import { Theme, ThemePanel } from "@radix-ui/themes";
 import NavBar from './NavBar';
+import AuthProvider from "./auth/provider";
 
 
 
@@ -28,13 +30,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.variable}>
+        <AuthProvider>
       <Theme accentColor="blue">
         <NavBar />
         <main className='p-5'> 
             {children}
         </main>
       </Theme>
-        
+      </AuthProvider>
       </body>
     </html>
   )
